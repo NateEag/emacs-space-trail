@@ -15,9 +15,28 @@ which has some trailing whitespace    ")
 
               (expect (re-search-forward "\\s-$" nil t) :to-be nil))
 
-          (it "does not remove trailing whitespace in ignored modes."
+          (it "does not remove trailing space in ignored modes."
               (diff-mode)
               (space-trail-maybe-delete-trailing-whitespace)
-              (message (buffer-string))
 
-              (expect (re-search-forward "\\s-$" nil t) :not :to-be nil)))
+              (expect (re-search-forward "\\s-$" nil t) :not :to-be nil)
+              (fundamental-mode))
+
+          (it "removes trailing space on current line only if asked."
+              (goto-line 2)
+              (space-trail-maybe-delete-trailing-whitespace)
+
+              (goto-char 0)
+              (expect (re-search-forward "\\s-$" nil t) :not :to-be nil)
+
+              ;; TODO Find more readable way to remove function from list.
+              (setq space-trail-prevent-line-stripping-predicates '())
+
+              (goto-line 2)
+              (space-trail-maybe-delete-trailing-whitespace)
+
+              (expect (re-search-forward "\\s-$" nil t) :to-be nil))
+
+          (xit "removes trailing space inside strings only if asked.")
+
+          (xit "removes trailing space in Markdown literal blocks only if asked."))
