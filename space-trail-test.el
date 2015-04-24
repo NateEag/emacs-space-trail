@@ -1,3 +1,4 @@
+(require 'markdown-mode)
 (load-file "space-trail.el")
 
 (describe "space-trail-maybe-delete-trailing-whitespace"
@@ -37,6 +38,19 @@ which has some trailing whitespace    ")
 
               (expect (re-search-forward "\\s-$" nil t) :to-be nil))
 
+          (it "does not remove trailing space in Markdown code blocks."
+              (markdown-mode)
+
+              (erase-buffer)
+              (insert "The following code block has an empty line:
+    if () {
+    
+    }")
+
+              (space-trail-maybe-delete-trailing-whitespace)
+              (expect (re-search-forward "\\s-$" nil t) :not :to-be nil))
+
+          ;; TODO Implement this feature.
           (xit "removes trailing space inside strings only if asked.")
 
-          (xit "removes trailing space in Markdown literal blocks only if asked."))
+          )

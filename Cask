@@ -2,4 +2,5 @@
 (source melpa)
 
 (development
- (depends-on "buttercup"))
+ (depends-on "buttercup")
+ (depends-on "markdown-mode"))
