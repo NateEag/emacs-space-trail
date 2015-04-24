@@ -30,10 +30,17 @@
   "A list of functions. If any return true, do not strip current buffer.")
 
 ;; TODO This variable is currently unused. Either change that or delete it.
-(defvar space-trail-strip-whitespace-on-current-line-p
-  t
+;; A variable is better UI; removing the check function a la my current tests
+;; is simpler code.
+;; The right answer might be a function accepting an arg to let you set the
+;; behavior without understanding what lies beneath it.
+(defvar space-trail-should-strip-whitespace-on-current-line
+  nil
   ;; TODO Make this description coherent. Probably the variable name too...
-  "Whether to strip trailing whitespace on the cursor's current line.")
+  "If t, strip trailing whitespace on the cursor's current line.
+
+Nil by default, as it's distracting to have the cursor bounce around
+on save.")
 
 ;; TODO Add a variable to control whether whitespace will be stripped inside
 ;; strings. Should be doable semi-generally, because syntax tables. Not sure
@@ -118,10 +125,8 @@ to give space-trail.el a hook point."
 (defun space-trail-maybe-delete-trailing-whitespace ()
   "Delete trailing whitespace in current buffer if appropriate."
 
-  ;; TODO declare cl-lib dependency for `some`.
   (unless (some
            (lambda (x) x)
-           ;; TODO change `stop` to `prevent`.
            (mapcar 'funcall space-trail-prevent-buffer-stripping-predicates))
         (space-trail-delete-trailing-whitespace)))
 
