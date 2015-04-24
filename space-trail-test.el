@@ -23,6 +23,11 @@ which has some trailing whitespace    ")
               (expect (re-search-forward "\\s-$" nil t) :not :to-be nil)
               (fundamental-mode))
 
+          ;; TODO Implement this feature (maybe - might only be useful in
+          ;; early dev of space-trail, since the "don't strip inside strings"
+          ;; feature hasn't been implemented yet).
+          (xit "does not remove trailing space in opted-out buffers.")
+          
           (it "removes trailing space on current line only if asked."
               (goto-line 2)
               (space-trail-maybe-delete-trailing-whitespace)
