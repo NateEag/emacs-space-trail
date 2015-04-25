@@ -93,7 +93,15 @@ which has some trailing whitespace    ")
               (space-trail-maybe-delete-trailing-whitespace)
               (expect (space-trail-test-next-trailing-whitespace) :to-be nil))
 
-          ;; TODO Implement this feature.
-          (xit "removes trailing space inside strings only if asked.")
+          ;; TODO Implement an opt-in to stripping inside strings.
+          (it "removes trailing space inside strings only if asked."
+            (erase-buffer)
+            (emacs-lisp-mode)
+
+            (insert "(foo \"This is a     \nstring with trailing spaces.\")")
+
+            (space-trail-maybe-delete-trailing-whitespace)
+
+            (expect (space-trail-test-next-trailing-whitespace) :not :to-be nil))
 
           )
