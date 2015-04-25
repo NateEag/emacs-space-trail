@@ -1,7 +1,21 @@
 (require 'markdown-mode)
 (load-file "space-trail.el")
 
+(defun space-trail-test-next-trailing-whitespace ()
+  "Search for next chunk of trailing whitespace."
+
+  (re-search-forward
+ 
+   ;; 'Whitespace' here is *not* \\s-, because that includes \n\n, which we
+   ;; don't want to match. It's a character class matching space and tab.
+   ;;
+   ;; If one of those is followed by end-of-line or end-of-buffer, then we
+   ;; know it's trailing.
+   "[ 	]+\\($\\|\\'\\)"
+   nil t))
+
 (describe "space-trail-maybe-delete-trailing-whitespace"
+
           (before-each
            (get-buffer-create "space-trail-test")
            (set-buffer "space-trail-test")
@@ -18,17 +32,17 @@ which has some trailing whitespace    ")
           (it "removes a buffer's trailing whitespace."
               (space-trail-maybe-delete-trailing-whitespace)
 
-              (expect (re-search-forward "[ 	]+$" nil t) :to-be nil))
+              (expect (space-trail-test-next-trailing-whitespace) :to-be nil))
 
           (it "does not remove trailing space in ignored modes."
               (diff-mode)
               (space-trail-maybe-delete-trailing-whitespace)
 
-              (expect (re-search-forward "[ 	]+$" nil t) :not :to-be nil)
+              (expect (space-trail-test-next-trailing-whitespace) :not :to-be nil)
               (fundamental-mode))
 
           ;; TODO Implement this feature (maybe - might only be useful in
-          ;; early Devi of space-trail, since the "don't strip inside strings"
+          ;; early dev of space-trail, since the "don't strip inside strings"
           ;; feature hasn't been implemented yet).
           (xit "does not remove trailing space in opted-out buffers.")
           
@@ -37,7 +51,7 @@ which has some trailing whitespace    ")
               (space-trail-maybe-delete-trailing-whitespace)
 
               (goto-char 0)
-              (expect (re-search-forward "[ 	]+$" nil t) :not :to-be nil)
+              (expect (space-trail-test-next-trailing-whitespace) :not :to-be nil)
 
               ;; TODO Once a real deactivate mechanism is defined, use that.
               ;; This is a lame hack.
@@ -46,7 +60,7 @@ which has some trailing whitespace    ")
               (goto-line 3)
               (space-trail-maybe-delete-trailing-whitespace)
 
-              (expect (re-search-forward "[ 	]+$" nil t) :to-be nil)
+              (expect (space-trail-test-next-trailing-whitespace) :to-be nil)
 
               (setq space-trail-prevent-line-stripping-predicates
                     '(space-trail-point-on-line-p
@@ -65,7 +79,7 @@ which has some trailing whitespace    ")
 
               (expect space-trail-prevent-line-stripping-predicates :to-equal
                       '(space-trail-point-on-line-p space-trail-in-markdown-code-block-p))
-              (expect (re-search-forward "[ 	]+$" nil t) :not :to-be nil))
+              (expect (space-trail-test-next-trailing-whitespace) :not :to-be nil))
 
           (it "removes trailing space outside Markdown code blocks."
               (erase-buffer)
@@ -77,7 +91,7 @@ which has some trailing whitespace    ")
 
               (goto-char 0)
               (space-trail-maybe-delete-trailing-whitespace)
-              (expect (re-search-forward "[ 	]+$" nil t) :to-be nil))
+              (expect (space-trail-test-next-trailing-whitespace) :to-be nil))
 
           ;; TODO Implement this feature.
           (xit "removes trailing space inside strings only if asked.")
