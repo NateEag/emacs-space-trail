@@ -48,7 +48,9 @@ on save.")
 
 ;; TODO Add check for markdown-mode 4-space indented literal blocks.
 (defvar space-trail-prevent-line-stripping-predicates
-  '(space-trail-point-on-line-p space-trail-in-markdown-code-block-p)
+  '(space-trail-point-on-line-p
+    space-trail-in-markdown-code-block-p
+    space-trail-in-string-p)
   "A list of functions that can prevent stripping a line's whitespace.
 
 Before stripping a line's trailing whitespace, each one is called,
@@ -76,6 +78,20 @@ just didn't find it."
     (goto-line line-num)
     (and (eq major-mode 'markdown-mode)
          (>= (markdown-cur-line-indent) 4))))
+
+;; TODO Offer a way to opt out of this function.
+(defun space-trail-in-string-p (line-num cur-point)
+  "Return `t' if LINE-NUM's trailing space is inside a string.
+
+Otherwise, return `nil'.
+
+Relies on syntax-ppss."
+
+  (save-excursion
+    (goto-line line-num)
+    (move-end-of-line nil)
+    (if (nth 8 (syntax-ppss))
+        t)))
 
 (defun space-trail-delete-trailing-whitespace (&optional start end)
   "Delete trailing whitespace between START and END.

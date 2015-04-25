@@ -64,7 +64,8 @@ which has some trailing whitespace    ")
 
               (setq space-trail-prevent-line-stripping-predicates
                     '(space-trail-point-on-line-p
-                      space-trail-in-markdown-code-block-p)))
+                      space-trail-in-markdown-code-block-p
+                      space-trail-in-string-p)))
 
           (it "does not remove trailing space in Markdown code blocks."
               (markdown-mode)
@@ -77,8 +78,6 @@ which has some trailing whitespace    ")
               (space-trail-maybe-delete-trailing-whitespace)
               (goto-char 0)
 
-              (expect space-trail-prevent-line-stripping-predicates :to-equal
-                      '(space-trail-point-on-line-p space-trail-in-markdown-code-block-p))
               (expect (space-trail-test-next-trailing-whitespace) :not :to-be nil))
 
           (it "removes trailing space outside Markdown code blocks."
@@ -102,6 +101,7 @@ which has some trailing whitespace    ")
 
             (space-trail-maybe-delete-trailing-whitespace)
 
+            (goto-char 0)
             (expect (space-trail-test-next-trailing-whitespace) :not :to-be nil))
 
           )
