@@ -48,7 +48,7 @@ on save.")
 
 ;; TODO Add check for markdown-mode 4-space indented literal blocks.
 (defvar space-trail-prevent-line-stripping-predicates
-  '(space-trail-point-on-line-p)
+  '(space-trail-point-on-line-p space-trail-in-markdown-code-block-p)
   "A list of functions that can prevent stripping a line's whitespace.
 
 Before stripping a line's trailing whitespace, each one is called,
@@ -60,6 +60,22 @@ be stripped.")
 (defun space-trail-point-on-line-p (line-num orig-point)
   "Return true if LINE-NUM of current buffer contains ORIG-POINT."
   (= line-num (line-number-at-pos orig-point)))
+
+(defun space-trail-in-markdown-code-block-p (line-num cur-point)
+  "Return `t' if LINE-NUM is part of a Markdown code block.
+
+Always returns `nil' if current buffer is not in markdown-mode.
+
+It is conceivable markdown-mode already has this function and I
+just didn't find it."
+
+  ;; TODO Figure out how I should handle dependency on markdown-mode.
+  ;; I don't want to require it to install this library - just to have this
+  ;; library do the right thing in markdown-mode buffers.
+  (save-excursion
+    (goto-line line-num)
+    (and (eq major-mode 'markdown-mode)
+         (>= (markdown-cur-line-indent) 4))))
 
 (defun space-trail-delete-trailing-whitespace (&optional start end)
   "Delete trailing whitespace between START and END.
