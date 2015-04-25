@@ -40,7 +40,6 @@ or if a particular file actually needs to contain trailing whitespace.")
 
 (defvar space-trail-strip-whitespace-on-current-line
   nil
-  ;; TODO Make this description coherent. Probably the variable name too...
   "If nil, do not strip trailing whitespace on current line.
 
 Nil by default, as it's annoying to lose indentation you just added
@@ -49,6 +48,19 @@ intentionally because you saved.")
 ;; TODO Add a variable to control whether whitespace will be stripped inside
 ;; strings. Should be doable semi-generally, because syntax tables. Not sure
 ;; what would be involved.
+(defvar space-trail-strip-whitespace-in-strings
+  t
+  "When t, strip whitespace inside of strings.
+
+If nil, leave such whitespace intact.
+
+Defaults to t, as most of the time trailing whitespace in strings is
+probably an accident.
+
+Still, there are cases (such as space-trail's test suite) where you really
+do want to preserve trailing whitespace in strings.
+
+Thus, this variable.")
 
 (defvar space-trail-prevent-line-stripping-predicates
   '(space-trail-point-on-line-p
@@ -86,19 +98,23 @@ just didn't find it."
     (and (eq major-mode 'markdown-mode)
          (>= (markdown-cur-line-indent) 4))))
 
-;; TODO Offer a way to opt out of this function.
 (defun space-trail-in-string-p (line-num cur-point)
-  "Return `t' if LINE-NUM's trailing space is inside a string.
+  "Return t if LINE-NUM's trailing space is inside a string.
 
-Otherwise, return `nil'.
+Otherwise, return nil.
 
-Relies on syntax-ppss."
+Always return nil if `space-trail-strip-whitespace-in-strings' is t,
+thereby effectively deactivating this function.
 
-  (save-excursion
-    (goto-line line-num)
-    (move-end-of-line nil)
-    (if (nth 8 (syntax-ppss))
-        t)))
+Relies on `syntax-ppss'."
+
+  (if space-trail-strip-whitespace-in-strings
+      nil
+    (save-excursion
+      (goto-line line-num)
+      (move-end-of-line nil)
+      (if (nth 8 (syntax-ppss))
+          t))))
 
 (defun space-trail-delete-trailing-whitespace (&optional start end)
   "Delete trailing whitespace between START and END.

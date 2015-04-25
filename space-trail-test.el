@@ -5,7 +5,7 @@
   "Search for next chunk of trailing whitespace."
 
   (re-search-forward
- 
+
    ;; 'Whitespace' here is *not* \\s-, because that includes \n\n, which we
    ;; don't want to match. It's a character class matching space and tab.
    ;;
@@ -50,7 +50,7 @@ which has some trailing whitespace    ")
 
 which has some trailing whitespace    ")
             (goto-char 0)
-            
+
             (space-trail-maybe-delete-trailing-whitespace)
 
             (expect (space-trail-test-next-trailing-whitespace) :not :to-be nil)
@@ -62,7 +62,7 @@ which has some trailing whitespace    ")
             (space-trail-maybe-delete-trailing-whitespace)
 
             (expect (space-trail-test-next-trailing-whitespace) :to-be nil))
-          
+
           (it "removes trailing space on current line only if asked."
               (goto-line 3)
               (space-trail-maybe-delete-trailing-whitespace)
@@ -104,7 +104,7 @@ which has some trailing whitespace    ")
               (expect (space-trail-test-next-trailing-whitespace) :to-be nil))
 
           ;; TODO Implement an opt-in to stripping inside strings.
-          (it "removes trailing space inside strings only if asked."
+          (it "removes trailing space inside strings unless asked not to."
             (erase-buffer)
             (emacs-lisp-mode)
 
@@ -113,6 +113,22 @@ which has some trailing whitespace    ")
             (space-trail-maybe-delete-trailing-whitespace)
 
             (goto-char 0)
+            (expect (space-trail-test-next-trailing-whitespace) :to-be nil)
+
+            (erase-buffer)
+
+            (insert "(foo \"This is a     \nstring with trailing spaces.\")")
+
+            (make-local-variable 'space-trail-strip-whitespace-in-strings)
+            (setq space-trail-strip-whitespace-in-strings nil)
+
+            (space-trail-maybe-delete-trailing-whitespace)
+
+            (goto-char 0)
             (expect (space-trail-test-next-trailing-whitespace) :not :to-be nil))
 
           )
+
+;; Local Variables:
+;; space-trail-strip-whitespace-in-strings: nil
+;; End:
