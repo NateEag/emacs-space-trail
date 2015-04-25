@@ -25,6 +25,15 @@
   '(diff-mode)
   "A list of modes that should not have trailing whitespace stripped.")
 
+(defvar space-trail-ignore-buffer
+  nil
+  "If this buffer-local var is t, do not strip trailing whitespace.
+
+An escape hatch that should be useful in .dir-locals.el, if a project
+is littered with trailing whitespace and you don't want to fix it right now,
+or if a particular file actually needs to contain trailing whitespace.")
+(make-variable-buffer-local 'space-trail-ignore-buffer)
+
 (defvar space-trail-prevent-buffer-stripping-predicates
   '(space-trail-ignored-mode-p)
   "A list of functions. If any return true, do not strip current buffer.")
@@ -155,9 +164,11 @@ to give space-trail.el a hook point."
 (defun space-trail-maybe-delete-trailing-whitespace ()
   "Delete trailing whitespace in current buffer if appropriate."
 
-  (unless (some
-           (lambda (x) x)
-           (mapcar 'funcall space-trail-prevent-buffer-stripping-predicates))
+  (unless (or
+           space-trail-ignore-buffer
+           (some
+            (lambda (x) x)
+            (mapcar 'funcall space-trail-prevent-buffer-stripping-predicates)))
         (space-trail-delete-trailing-whitespace)))
 
 (defun space-trail-ignored-mode-p (&optional buffer-or-string)

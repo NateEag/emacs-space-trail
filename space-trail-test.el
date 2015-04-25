@@ -41,10 +41,27 @@ which has some trailing whitespace    ")
               (expect (space-trail-test-next-trailing-whitespace) :not :to-be nil)
               (fundamental-mode))
 
-          ;; TODO Implement this feature (maybe - might only be useful in
-          ;; early dev of space-trail, since the "don't strip inside strings"
-          ;; feature hasn't been implemented yet).
-          (xit "does not remove trailing space in opted-out buffers.")
+          (it "does not remove trailing space in opted-out buffers."
+            (get-buffer-create "space-trail-test-ignored")
+            (set-buffer "space-trail-test-ignored")
+            (setq space-trail-ignore-buffer t)
+
+            (insert "This is a string
+
+which has some trailing whitespace    ")
+            (goto-char 0)
+            
+            (space-trail-maybe-delete-trailing-whitespace)
+
+            (expect (space-trail-test-next-trailing-whitespace) :not :to-be nil)
+
+            (kill-buffer "space-trail-test-ignored")
+
+            (set-buffer "space-trail-test")
+
+            (space-trail-maybe-delete-trailing-whitespace)
+
+            (expect (space-trail-test-next-trailing-whitespace) :to-be nil))
           
           (it "removes trailing space on current line only if asked."
               (goto-line 3)
