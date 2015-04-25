@@ -29,24 +29,18 @@
   '(space-trail-ignored-mode-p)
   "A list of functions. If any return true, do not strip current buffer.")
 
-;; TODO This variable is currently unused. Either change that or delete it.
-;; A variable is better UI; removing the check function a la my current tests
-;; is simpler code.
-;; The right answer might be a function accepting an arg to let you set the
-;; behavior without understanding what lies beneath it.
-(defvar space-trail-should-strip-whitespace-on-current-line
+(defvar space-trail-strip-whitespace-on-current-line
   nil
   ;; TODO Make this description coherent. Probably the variable name too...
-  "If t, strip trailing whitespace on the cursor's current line.
+  "If nil, do not strip trailing whitespace on current line.
 
-Nil by default, as it's distracting to have the cursor bounce around
-on save.")
+Nil by default, as it's annoying to lose indentation you just added
+intentionally because you saved.")
 
 ;; TODO Add a variable to control whether whitespace will be stripped inside
 ;; strings. Should be doable semi-generally, because syntax tables. Not sure
 ;; what would be involved.
 
-;; TODO Add check for markdown-mode 4-space indented literal blocks.
 (defvar space-trail-prevent-line-stripping-predicates
   '(space-trail-point-on-line-p
     space-trail-in-markdown-code-block-p
@@ -59,9 +53,13 @@ passing the current line number and the cursor's current location.
 If any function returns true, the line's trailing whitespace won't
 be stripped.")
 
-(defun space-trail-point-on-line-p (line-num orig-point)
-  "Return true if LINE-NUM of current buffer contains ORIG-POINT."
-  (= line-num (line-number-at-pos orig-point)))
+(defun space-trail-point-on-line-p (line-num cursor-pos)
+  "Return true if LINE-NUM of current buffer contains CURSOR-POS.
+
+If `space-trail-strip-whitespace-on-current-line' is t, this function
+will always return false, effectively deactivating it."
+  (and (not space-trail-strip-whitespace-on-current-line)
+       (= line-num (line-number-at-pos orig-point))))
 
 (defun space-trail-in-markdown-code-block-p (line-num cur-point)
   "Return `t' if LINE-NUM is part of a Markdown code block.
@@ -128,8 +126,8 @@ to give space-trail.el a hook point."
           (if (or
                ;; Don't delete formfeeds, even if they are considered whitespace.
                (looking-at-p ".*\f")
-               ;; Don't delete lines that have protection via space-trail.
-               ;; TODO This whole mess should be abstracted.
+               ;; Don't delete whitespace protected via space-trail.
+               ;; TODO This whole mess should abstracted.
                ;; TODO Document or fix dep on cl for `some`.
                (some
                 (lambda (x) x)

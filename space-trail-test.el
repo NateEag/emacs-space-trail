@@ -53,19 +53,13 @@ which has some trailing whitespace    ")
               (goto-char 0)
               (expect (space-trail-test-next-trailing-whitespace) :not :to-be nil)
 
-              ;; TODO Once a real deactivate mechanism is defined, use that.
-              ;; This is a lame hack.
-              (setq space-trail-prevent-line-stripping-predicates '())
+              (make-local-variable 'space-trail-strip-whitespace-on-current-line)
+              (setq space-trail-strip-whitespace-on-current-line t)
 
               (goto-line 3)
               (space-trail-maybe-delete-trailing-whitespace)
 
-              (expect (space-trail-test-next-trailing-whitespace) :to-be nil)
-
-              (setq space-trail-prevent-line-stripping-predicates
-                    '(space-trail-point-on-line-p
-                      space-trail-in-markdown-code-block-p
-                      space-trail-in-string-p)))
+              (expect (space-trail-test-next-trailing-whitespace) :to-be nil))
 
           (it "does not remove trailing space in Markdown code blocks."
               (markdown-mode)
