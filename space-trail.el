@@ -94,7 +94,8 @@ just didn't find it."
   ;; I don't want to require it to install this library - just to have this
   ;; library do the right thing in markdown-mode buffers.
   (save-excursion
-    (goto-line line-num)
+    (goto-char (point-min))
+    (forward-line (1- line-num))
     (and (eq major-mode 'markdown-mode)
          (>= (markdown-cur-line-indent) 4))))
 
@@ -111,7 +112,8 @@ Relies on `syntax-ppss'."
   (if space-trail-strip-whitespace-in-strings
       nil
     (save-excursion
-      (goto-line line-num)
+      (goto-char (point-min))
+      (forward-line (1- line-num))
       (move-end-of-line nil)
       (if (nth 8 (syntax-ppss))
           t))))

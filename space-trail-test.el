@@ -64,7 +64,8 @@ which has some trailing whitespace    ")
             (expect (space-trail-test-next-trailing-whitespace) :to-be nil))
 
           (it "removes trailing space on current line only if asked."
-              (goto-line 3)
+              (goto-char (point-min))
+              (forward-line 2)
               (space-trail-maybe-delete-trailing-whitespace)
 
               (goto-char 0)
@@ -73,7 +74,8 @@ which has some trailing whitespace    ")
               (make-local-variable 'space-trail-strip-whitespace-on-current-line)
               (setq space-trail-strip-whitespace-on-current-line t)
 
-              (goto-line 3)
+              (goto-char (point-min))
+              (forward-line 2)
               (space-trail-maybe-delete-trailing-whitespace)
 
               (expect (space-trail-test-next-trailing-whitespace) :to-be nil))
