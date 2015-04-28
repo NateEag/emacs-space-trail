@@ -3,6 +3,7 @@
 ;; Copyright 2015 Nate Eagleson
 ;; Author: Nate Eagleson
 ;; Keywords: whitespace, trailing whitespace
+;; Package-Requires: ((cl-lib "0.5"))
 ;; Version: 0.1.0
 
 ;;; Commentary:
@@ -231,8 +232,7 @@ to give space-trail.el a hook point."
                (looking-at-p ".*\f")
                ;; Don't delete whitespace protected via space-trail.
                ;; TODO This whole mess should abstracted.
-               ;; TODO Document or fix dep on cl for `some`.
-               (some
+               (cl-some
                 (lambda (x) x)
                 (mapcar (lambda (func)
                           (funcall func
@@ -260,7 +260,7 @@ to give space-trail.el a hook point."
 
   (unless (or
            space-trail-ignore-buffer
-           (some
+           (cl-some
             (lambda (x) x)
             (mapcar 'funcall space-trail-prevent-buffer-stripping-predicates)))
         (space-trail-delete-trailing-whitespace)))
