@@ -258,6 +258,9 @@ to give space-trail.el a hook point."
 (defun space-trail-maybe-delete-trailing-whitespace ()
   "Delete trailing whitespace in current buffer if appropriate."
 
+  (unless (featurep 'cl-lib)
+    (require 'cl-lib))
+
   (unless (or
            space-trail-ignore-buffer
            (cl-some
