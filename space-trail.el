@@ -35,6 +35,9 @@
 ;;
 ;;     (space-trail-activate)
 ;;
+;; If you need to turn space-trail off temporarily, run
+;; `M-x space-trail-deactivate`.
+;;
 ;;; Useful Variables
 ;;
 ;; By default, space-trail does not strip whitespace from your current line.
