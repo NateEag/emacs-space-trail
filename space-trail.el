@@ -97,7 +97,6 @@
 
 ;;; Code:
 
-
 (defvar space-trail-ignored-modes
   '(diff-mode)
   "A list of modes that should not have trailing whitespace stripped.")
@@ -122,9 +121,6 @@ or if a particular file actually needs to contain trailing whitespace.")
 Nil by default, as it's annoying to lose indentation you just added
 intentionally because you saved.")
 
-;; TODO Add a variable to control whether whitespace will be stripped inside
-;; strings. Should be doable semi-generally, because syntax tables. Not sure
-;; what would be involved.
 (defvar space-trail-strip-whitespace-in-strings
   t
   "When t, strip whitespace inside of strings.
@@ -230,8 +226,10 @@ to give space-trail.el a hook point."
           (if (or
                ;; Don't delete formfeeds, even if they are considered whitespace.
                (looking-at-p ".*\f")
-               ;; Don't delete whitespace protected via space-trail.
-               ;; TODO This whole mess should abstracted.
+               ;; Don't delete whitespace protected via one of space-trail's
+               ;; mechanisms.
+               ;; TODO Abstract this. It would be clearer (and probably easier
+               ;; to integrate patches to delete-trailing-whitespace).
                (cl-some
                 (lambda (x) x)
                 (mapcar (lambda (func)
