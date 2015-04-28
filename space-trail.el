@@ -270,12 +270,14 @@ to give space-trail.el a hook point."
   (with-current-buffer (or buffer-or-string (current-buffer))
     (member major-mode space-trail-ignored-modes)))
 
+;;;###autoload
 (defun space-trail-activate ()
   "Remove meaningless trailing whitespace before saving."
 
   (interactive)
   (add-hook 'before-save-hook 'space-trail-maybe-delete-trailing-whitespace))
 
+;;;###autoload
 (defun space-trail-deactivate ()
   "Stop removing meaningless trailing whitespace before saving."
 
