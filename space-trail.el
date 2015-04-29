@@ -163,9 +163,6 @@ Always returns `nil' if current buffer is not in markdown-mode.
 It is conceivable markdown-mode already has this function and I
 just didn't find it."
 
-  ;; TODO Figure out how I should handle dependency on markdown-mode.
-  ;; I don't want to require it to install this library - just to have this
-  ;; library do the right thing in markdown-mode buffers.
   (save-excursion
     (goto-char (point-min))
     (forward-line (1- line-num))
