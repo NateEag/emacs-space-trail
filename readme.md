@@ -1,9 +1,11 @@
 # space-trail.el --- Remove trailing whitespace on save when sensible.
 
 Copyright 2015 Nate Eagleson
-* Author: Nate Eagleson
+* Author: Nate Eagleson <nate@nateeag.com>
 * Keywords: whitespace, trailing whitespace
+* Package-Requires: ((cl-lib "0.5"))
 * Version: 0.1.0
+* Homepage: http://github.com/NateEag/emacs-space-trail
 
 # Commentary
 
@@ -34,6 +36,9 @@ To have space-trail handle trailing whitespace on save, put this elisp
 somewhere in your Emacs config (like init.el):
 
     (space-trail-activate)
+
+If you need to turn space-trail off temporarily, run
+`M-x space-trail-deactivate`.
 
 # Useful Variables
 
@@ -90,7 +95,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 readme.md is generated from the source code using
 [md-readme](https://github.com/thomas11/md-readme).
-
 
 
 

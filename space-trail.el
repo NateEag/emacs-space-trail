@@ -1,10 +1,11 @@
 ;;; space-trail.el --- Remove trailing whitespace on save when sensible.
 
 ;; Copyright 2015 Nate Eagleson
-;; Author: Nate Eagleson
+;; Author: Nate Eagleson <nate@nateeag.com>
 ;; Keywords: whitespace, trailing whitespace
 ;; Package-Requires: ((cl-lib "0.5"))
 ;; Version: 0.1.0
+;; Homepage: http://github.com/NateEag/emacs-space-trail
 
 ;;; Commentary:
 
