@@ -98,6 +98,8 @@
 
 ;;; Code:
 
+(declare-function markdown-cur-line-indent "markdown-mode")
+
 (defvar space-trail-ignored-modes
   '(diff-mode)
   "A list of modes that should not have trailing whitespace stripped.")
