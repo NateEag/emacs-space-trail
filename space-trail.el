@@ -154,7 +154,7 @@ be stripped.")
 If `space-trail-strip-whitespace-on-current-line' is t, this function
 will always return false, effectively deactivating it."
   (and (not space-trail-strip-whitespace-on-current-line)
-       (= line-num (line-number-at-pos orig-point))))
+       (= line-num (line-number-at-pos cursor-pos))))
 
 (defun space-trail-in-markdown-code-block-p (line-num cur-point)
   "Return `t' if LINE-NUM is part of a Markdown code block.
